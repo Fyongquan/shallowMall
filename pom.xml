@@ -9,11 +9,21 @@
     <description>浅度商城-聚合服务</description>
     <packaging>pom</packaging>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.6</version> <!-- 保持与子模块一致 -->
+        <relativePath/> <!-- 强制从仓库拉取 -->
+    </parent>
+
     <modules>
         <module>shallowMall-coupon</module>
         <module>shallowMall-member</module>
         <module>shallowMall-order</module>
         <module>shallowMall-product</module>
         <module>shallowMall-ware</module>
+        <module>renren-fast</module>
+        <module>renren-generator-master</module>
+        <module>shallowMall-common</module>
     </modules>
 </project>
