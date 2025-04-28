@@ -27,11 +27,22 @@ import com.fyq.common.utils.R;
  * @email 1304184660@qq.com
  * @date 2025-04-27 17:50:59
  */
+@RefreshScope
 @RestController
 @RequestMapping("coupon/coupon")
 public class CouponController {
     @Autowired
     private CouponService couponService;
+
+    @Value("${coupon.user.name}")
+    private String name;
+    @Value("${coupon.user.age}")
+    private Integer age;
+
+    @RequestMapping("/test")
+    public R test() {
+        return R.ok().put("name", name).put("age", age);
+    }
 
     @RequestMapping("/member/list")
     public R membercoupons(){
