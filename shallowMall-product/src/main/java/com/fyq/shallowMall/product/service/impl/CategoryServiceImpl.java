@@ -1,16 +1,19 @@
 package com.fyq.shallowMall.product.service.impl;
 
-import org.springframework.stereotype.Service;
-import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fyq.common.utils.PageUtils;
 import com.fyq.common.utils.Query;
-
 import com.fyq.shallowMall.product.dao.CategoryDao;
 import com.fyq.shallowMall.product.entity.CategoryEntity;
 import com.fyq.shallowMall.product.service.CategoryService;
+import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service("categoryService")
@@ -26,4 +29,35 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return new PageUtils(page);
     }
 
+    @Override
+    public List<CategoryEntity> listWithTree() {
+        // 1、查出所有分类
+        List<CategoryEntity> entities = baseMapper.selectList(null);
+
+        long startTime = System.nanoTime();
+
+        // 2、构建父子关系的哈希表
+        Map<Long, List<CategoryEntity>> childrenMap = entities.stream()
+                .collect(Collectors.groupingBy(CategoryEntity::getParentCid));
+
+        List<CategoryEntity> collect = entities.stream()
+                .filter(categoryEntity -> categoryEntity.getParentCid() == 0)
+                .peek(menu -> menu.setChildren(getChildrens(menu, childrenMap)))
+                .sorted((menu1, menu2) -> (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort()))
+                .collect(Collectors.toList());
+
+        long endTime = System.nanoTime();
+        System.out.println("耗时：" + (endTime - startTime) / 1000000 + "ms");
+
+        // 3、找到所有一级分类并设置子节点
+        return collect;
+    }
+
+    // 递归查找所有菜单的子菜单
+    private List<CategoryEntity> getChildrens(CategoryEntity root, Map<Long, List<CategoryEntity>> childrenMap) {
+        return childrenMap.getOrDefault(root.getCatId(), Collections.emptyList()).stream()
+                .peek(child -> child.setChildren(getChildrens(child, childrenMap)))
+                .sorted((menu1, menu2) -> (menu1.getSort() == null ? 0 : menu1.getSort()) - (menu2.getSort() == null ? 0 : menu2.getSort()))
+                .collect(Collectors.toList());
+    }
 }

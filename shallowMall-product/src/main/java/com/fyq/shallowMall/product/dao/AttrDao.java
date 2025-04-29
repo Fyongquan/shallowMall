@@ -13,5 +13,8 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface AttrDao extends BaseMapper<AttrEntity> {
-	
+
+//    添加value_type字段
+//    <result property="valueType" column="value_type"/>
+//    还需要去vo下添加value_type字段
 }

@@ -56,5 +56,10 @@ public class AttrEntity implements Serializable {
 	 * 快速展示[0=不展示 1=展示]
 	 */
 	private Integer showDesc;
+	/**
+	 * 可选值类型
+	 */
+	private Integer valueType;
+
 
 }
