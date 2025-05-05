@@ -54,16 +54,22 @@
             <scope>provided</scope>
         </dependency>
 
-<!--        服务注册/发现-->
+        <!--        服务注册/发现-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
 
-<!--        配置中心来做配置管理-->
+        <!--        配置中心来做配置管理-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+
+        <!--        springcloud-Alibaba-oss-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-alicloud-oss</artifactId>
         </dependency>
     </dependencies>
 

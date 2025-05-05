@@ -10,6 +10,11 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    alicloud:
+      access-key: ${aliyun.access-key}
+      secret-key: ${aliyun.secret-key}
+      oss:
+        endpoint: ${aliyun.oss.endpoint}
   application:
     name: shallowMall-product
 
@@ -26,3 +31,5 @@ server:
 logging:
   level:
     com.fyq.shallowMall: debug
+
+

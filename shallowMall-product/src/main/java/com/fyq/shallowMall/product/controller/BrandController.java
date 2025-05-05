@@ -4,11 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.fyq.shallowMall.product.entity.BrandEntity;
 import com.fyq.shallowMall.product.service.BrandService;
@@ -67,6 +63,16 @@ public class BrandController {
     @RequestMapping("/update")
     public R update(@RequestBody BrandEntity brand){
 		brandService.updateById(brand);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @PostMapping("update/status")
+    public R updateStatus(@RequestBody BrandEntity brand){
+        brandService.updateById(brand);
 
         return R.ok();
     }
