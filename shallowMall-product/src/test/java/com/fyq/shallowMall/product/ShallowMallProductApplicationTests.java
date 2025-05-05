@@ -1,6 +1,5 @@
 package com.fyq.shallowMall.product;
 
-import com.aliyun.oss.OSSClient;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fyq.shallowMall.product.entity.BrandEntity;
 import com.fyq.shallowMall.product.service.BrandService;
@@ -22,15 +21,15 @@ public class ShallowMallProductApplicationTests {
     @Autowired
     private BrandService brandService;
 
-    @Autowired
-    private OSSClient ossClient;
-
-    @Test
-    public void testUpload() throws com.aliyuncs.exceptions.ClientException, FileNotFoundException {
-        InputStream inputStream = new FileInputStream("C:\\Users\\付yq\\Pictures\\Screenshots\\屏幕截图 2024-07-01 015036.png");
-        ossClient.putObject("shallow-mall", "fyq.png", inputStream);
-        System.out.println("上传完成");
-    }
+//    @Autowired
+//    private OSSClient ossClient;
+//
+//    @Test
+//    public void testUpload() throws com.aliyuncs.exceptions.ClientException, FileNotFoundException {
+//        InputStream inputStream = new FileInputStream("C:\\Users\\付yq\\Pictures\\Screenshots\\屏幕截图 2024-07-01 015036.png");
+//        ossClient.putObject("shallow-mall", "fyq.png", inputStream);
+//        System.out.println("上传完成");
+//    }
 
     @Test
     public void contextLoads() {
