@@ -1,9 +1,11 @@
 package com.fyq.shallowMall.product.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.fyq.shallowMall.product.entity.BrandEntity;
@@ -11,6 +13,7 @@ import com.fyq.shallowMall.product.service.BrandService;
 import com.fyq.common.utils.PageUtils;
 import com.fyq.common.utils.R;
 
+import javax.validation.Valid;
 
 
 /**
@@ -51,7 +54,16 @@ public class BrandController {
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody BrandEntity brand){
+    public R save(@Valid @RequestBody BrandEntity brand, BindingResult result){
+        if(result.hasErrors()){
+            Map<String, String> errors = new HashMap<>();
+            result.getFieldErrors().forEach(error -> {
+                String field = error.getField();
+                String defaultMessage = error.getDefaultMessage();
+                errors.put(field, defaultMessage);
+            });
+            return R.error(400, "提交的数据不合法").put("data", errors);
+        }
 		brandService.save(brand);
 
         return R.ok();
@@ -61,7 +73,7 @@ public class BrandController {
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody BrandEntity brand){
+    public R update(@Valid @RequestBody BrandEntity brand){
 		brandService.updateById(brand);
 
         return R.ok();
