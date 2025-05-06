@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 
 import com.fyq.common.valid.AddGroup;
+import com.fyq.common.valid.ListValue;
 import com.fyq.common.valid.UpdateGroup;
 import lombok.Data;
 import org.hibernate.validator.constraints.URL;
@@ -49,6 +50,7 @@ public class BrandEntity implements Serializable {
 	/**
 	 * 显示状态[0=隐藏 1=显示]
 	 */
+	@ListValue(vals = {0,1}, groups = AddGroup.class)
 	private Integer showStatus;
 	/**
 	 * 首字母

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.fyq.common.valid.AddGroup;
 import com.fyq.common.valid.UpdateGroup;
+import com.fyq.common.valid.UpdateStatusGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -83,10 +84,10 @@ public class BrandController {
     }
 
     /**
-     * 修改
+     * 修改状态
      */
     @PostMapping("update/status")
-    public R updateStatus(@RequestBody BrandEntity brand){
+    public R updateStatus(@Validated(value = UpdateStatusGroup.class) @RequestBody BrandEntity brand){
         brandService.updateById(brand);
 
         return R.ok();
