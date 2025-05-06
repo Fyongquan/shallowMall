@@ -4,8 +4,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fyq.common.valid.AddGroup;
+import com.fyq.common.valid.UpdateGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.fyq.shallowMall.product.entity.BrandEntity;
@@ -54,7 +57,7 @@ public class BrandController {
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@Valid @RequestBody BrandEntity brand/*, BindingResult result*/){
+    public R save(@Validated(value = AddGroup.class) @RequestBody BrandEntity brand/*, BindingResult result*/){
 //        if(result.hasErrors()){
 //            Map<String, String> errors = new HashMap<>();
 //            result.getFieldErrors().forEach(error -> {
@@ -73,7 +76,7 @@ public class BrandController {
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@Valid @RequestBody BrandEntity brand){
+    public R update(@Validated(value = UpdateGroup.class) @RequestBody BrandEntity brand){
 		brandService.updateById(brand);
 
         return R.ok();
