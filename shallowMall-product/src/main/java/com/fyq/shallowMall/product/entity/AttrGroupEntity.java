@@ -1,5 +1,6 @@
 package com.fyq.shallowMall.product.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -44,5 +45,11 @@ public class AttrGroupEntity implements Serializable {
 	 * 分类ID
 	 */
 	private Long catalogId;
+
+	/**
+	 * 分类ID完整路径
+	 */
+	@TableField(exist = false)
+	private Long[] catalogPath;
 
 }

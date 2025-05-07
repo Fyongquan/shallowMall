@@ -10,6 +10,7 @@ import com.fyq.shallowMall.product.entity.CategoryEntity;
 import com.fyq.shallowMall.product.service.CategoryService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,19 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
         //逻辑删除
         baseMapper.deleteBatchIds(list);
+    }
+
+    @Override
+    public Long[] getCatalogPath(Long catalogId) {
+        List<Long> path = new ArrayList<>();
+        while(catalogId != 0){
+            CategoryEntity categoryEntity = this.getById(catalogId);
+            path.add(catalogId);
+            catalogId = categoryEntity.getParentCid();
+        }
+        Collections.reverse(path);
+        System.out.println(path);
+        return path.toArray(new Long[path.size()]);
     }
 
     // 递归查找所有菜单的子菜单
