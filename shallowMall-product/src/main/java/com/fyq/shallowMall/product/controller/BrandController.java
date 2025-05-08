@@ -8,6 +8,7 @@ import com.fyq.common.valid.AddGroup;
 import com.fyq.common.valid.UpdateGroup;
 import com.fyq.common.valid.UpdateStatusGroup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,8 @@ import javax.validation.Valid;
 public class BrandController {
     @Autowired
     private BrandService brandService;
+
+    public static Long StartTime = 0L;
 
     /**
      * 列表
@@ -74,11 +77,16 @@ public class BrandController {
     }
 
     /**
-     * 修改
+     * 级联修改
      */
+    @Transactional
     @RequestMapping("/update")
     public R update(@Validated(value = UpdateGroup.class) @RequestBody BrandEntity brand){
-		brandService.updateById(brand);
+//		brandService.updateById(brand);
+
+        StartTime = System.nanoTime();
+
+        brandService.updateDetail(brand);
 
         return R.ok();
     }

@@ -1,13 +1,18 @@
 package com.fyq.shallowMall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fyq.common.utils.PageUtils;
 import com.fyq.common.utils.Query;
 import com.fyq.shallowMall.product.dao.CategoryDao;
 import com.fyq.shallowMall.product.entity.CategoryEntity;
+import com.fyq.shallowMall.product.service.CategoryBrandRelationService;
 import com.fyq.shallowMall.product.service.CategoryService;
+import org.apache.commons.lang.StringUtils;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +24,9 @@ import java.util.stream.Collectors;
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Autowired
+    private CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -73,6 +81,20 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         Collections.reverse(path);
         System.out.println(path);
         return path.toArray(new Long[path.size()]);
+    }
+
+    @Override
+    public void updateCategory(CategoryEntity category) {
+        CategoryEntity oldCategory = this.getById(category.getCatId());
+        String oldCategoryName = oldCategory.getName();
+        String newCategoryName = category.getName();
+
+        this.updateById(category);
+
+        if(!StringUtils.isEmpty(oldCategoryName) && !oldCategoryName.equals(newCategoryName)){
+            //TODO 更新其他关联表中的数据
+            categoryBrandRelationService.updateCategory(newCategoryName, category.getCatId());
+        }
     }
 
     // 递归查找所有菜单的子菜单

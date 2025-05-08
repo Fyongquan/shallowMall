@@ -23,7 +23,7 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<AttrGroupEntity> page = this.page(
                 new Query<AttrGroupEntity>().getPage(params),
-                new QueryWrapper<AttrGroupEntity>()
+                new QueryWrapper<>()
         );
 
         return new PageUtils(page);
@@ -36,12 +36,11 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
         } else {
             String key = (String) params.get("key");
             LambdaQueryWrapper<AttrGroupEntity> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(AttrGroupEntity::getCatalogId, catalogId);
             if (!StringUtils.isEmpty(key)) {
-                wrapper.and(obj -> {
-                    obj.eq(AttrGroupEntity::getAttrGroupId, key)
-                            .or()
-                            .like(AttrGroupEntity::getAttrGroupName, key);
-                });
+                wrapper.and(obj -> obj.eq(AttrGroupEntity::getAttrGroupId, key)
+                        .or()
+                        .like(AttrGroupEntity::getAttrGroupName, key));
             }
             IPage<AttrGroupEntity> page = this.page(
                     new Query<AttrGroupEntity>().getPage(params),

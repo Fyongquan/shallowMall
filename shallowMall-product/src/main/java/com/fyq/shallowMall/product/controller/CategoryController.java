@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import com.fyq.shallowMall.product.entity.CategoryEntity;
@@ -59,11 +60,14 @@ public class CategoryController {
     }
 
     /**
-     * 修改
+     * 级联修改
      */
+    @Transactional
     @RequestMapping("/update")
     public R update(@RequestBody CategoryEntity category){
-		categoryService.updateById(category);
+//		categoryService.updateById(category);
+
+        categoryService.updateCategory(category);
 
         return R.ok();
     }
