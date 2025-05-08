@@ -3,12 +3,10 @@ package com.fyq.shallowMall.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.fyq.shallowMall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import com.fyq.shallowMall.product.entity.AttrEntity;
 import com.fyq.shallowMall.product.service.AttrService;
@@ -37,7 +35,7 @@ public class AttrController {
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = attrService.queryPage(params);
 
-        return R.ok().put("page", page);
+        return R.ok().put("data", page);
     }
 
 
@@ -48,15 +46,16 @@ public class AttrController {
     public R info(@PathVariable("attrId") Long attrId){
 		AttrEntity attr = attrService.getById(attrId);
 
-        return R.ok().put("attr", attr);
+        return R.ok().put("data", attr);
     }
 
     /**
      * 保存
      */
+    @Transactional
     @RequestMapping("/save")
-    public R save(@RequestBody AttrEntity attr){
-		attrService.save(attr);
+    public R save(@RequestBody AttrVo attr){
+		attrService.saveAttr(attr);
 
         return R.ok();
     }
@@ -79,6 +78,16 @@ public class AttrController {
 		attrService.removeByIds(Arrays.asList(attrIds));
 
         return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @GetMapping("/base/list/{catalogId}")
+    public R delete(@RequestParam Map<String, Object> params, @PathVariable Long catalogId){
+        PageUtils page = attrService.queryPage(params, catalogId);
+
+        return R.ok().put("page", page);
     }
 
 }
