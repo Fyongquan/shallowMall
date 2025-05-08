@@ -23,8 +23,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
-import static com.fyq.shallowMall.product.controller.BrandController.StartTime;
-
 
 @Service("categoryBrandRelationService")
 public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandRelationDao, CategoryBrandRelationEntity> implements CategoryBrandRelationService {
@@ -81,9 +79,6 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
         wrapper.eq(CategoryBrandRelationEntity::getBrandId, categoryBrandRelation.getBrandId());
 
         this.update(categoryBrandRelation, wrapper);
-
-        long endTime = System.nanoTime();
-        System.out.println("耗时：" + (endTime - StartTime) / 1000000 + "ms");
     }
 
     @Override

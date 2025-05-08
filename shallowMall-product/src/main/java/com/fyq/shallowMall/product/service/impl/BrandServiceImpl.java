@@ -16,6 +16,7 @@ import com.fyq.common.utils.Query;
 import com.fyq.shallowMall.product.dao.BrandDao;
 import com.fyq.shallowMall.product.entity.BrandEntity;
 import com.fyq.shallowMall.product.service.BrandService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("brandService")
@@ -41,6 +42,7 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
         return new PageUtils(page);
     }
 
+    @Transactional
     @Override
     public void updateDetail(BrandEntity brand) {
 

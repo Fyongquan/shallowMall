@@ -5,12 +5,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 
 //@SpringBootApplication(scanBasePackages = {
 //        "com.fyq.shallowMall.product",
 //        "com.fyq.common"
 //})
+@EnableAspectJAutoProxy
 @SpringBootApplication
 @EnableDiscoveryClient
 @MapperScan("com.fyq.shallowMall.product.dao")

@@ -3,6 +3,7 @@ package com.fyq.shallowMall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fyq.common.utils.PageUtils;
 import com.fyq.shallowMall.product.entity.AttrEntity;
+import com.fyq.shallowMall.product.vo.AttrRespVo;
 import com.fyq.shallowMall.product.vo.AttrVo;
 
 import java.util.Map;
@@ -18,8 +19,12 @@ public interface AttrService extends IService<AttrEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
 
-    PageUtils queryPage(Map<String, Object> params, Long catalogId);
+    PageUtils queryBaseAttrPage(Map<String, Object> params, Long catalogId);
 
     void saveAttr(AttrVo attr);
+
+    AttrRespVo getAttrRespVo(Long attrId);
+
+    void updateAttrCascade(AttrVo attrRespVo);
 }
 

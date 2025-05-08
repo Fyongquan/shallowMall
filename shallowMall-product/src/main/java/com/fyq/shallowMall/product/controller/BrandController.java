@@ -7,6 +7,8 @@ import java.util.Map;
 import com.fyq.common.valid.AddGroup;
 import com.fyq.common.valid.UpdateGroup;
 import com.fyq.common.valid.UpdateStatusGroup;
+import com.fyq.shallowMall.product.annotation.LogAnnotation;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -34,12 +36,11 @@ public class BrandController {
     @Autowired
     private BrandService brandService;
 
-    public static Long StartTime = 0L;
-
     /**
      * 列表
      */
     @RequestMapping("/list")
+    @LogAnnotation
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = brandService.queryPage(params);
 
@@ -50,6 +51,7 @@ public class BrandController {
     /**
      * 信息
      */
+
     @RequestMapping("/info/{brandId}")
     public R info(@PathVariable("brandId") Long brandId){
 		BrandEntity brand = brandService.getById(brandId);
@@ -79,12 +81,11 @@ public class BrandController {
     /**
      * 级联修改
      */
-    @Transactional
+
+    @LogAnnotation
     @RequestMapping("/update")
     public R update(@Validated(value = UpdateGroup.class) @RequestBody BrandEntity brand){
 //		brandService.updateById(brand);
-
-        StartTime = System.nanoTime();
 
         brandService.updateDetail(brand);
 

@@ -62,7 +62,7 @@ public class CategoryController {
     /**
      * 级联修改
      */
-    @Transactional
+
     @RequestMapping("/update")
     public R update(@RequestBody CategoryEntity category){
 //		categoryService.updateById(category);

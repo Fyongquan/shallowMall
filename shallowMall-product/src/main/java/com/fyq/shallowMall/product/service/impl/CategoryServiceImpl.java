@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,6 +84,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return path.toArray(new Long[path.size()]);
     }
 
+    @Transactional
     @Override
     public void updateCategory(CategoryEntity category) {
         CategoryEntity oldCategory = this.getById(category.getCatId());
