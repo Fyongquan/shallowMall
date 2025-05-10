@@ -43,6 +43,7 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
 
     @Override
     public List<BrandEntity> queryCategoryRelatedBrands(Long catId) {
+        //TODO 根据分类ID获取对应的品牌
         return null;
     }
 
@@ -59,12 +60,15 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
         LambdaQueryWrapper<CategoryEntity> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CategoryEntity::getCatId, categoryBrandRelation.getCatalogId());
         CategoryEntity categoryEntity = categoryDao.selectOne(wrapper);
-        categoryBrandRelation.setCatalogName(categoryEntity.getName());
-
+        if(categoryEntity != null){
+            categoryBrandRelation.setCatalogName(categoryEntity.getName());
+        }
         LambdaQueryWrapper<BrandEntity> wrapper1 = new LambdaQueryWrapper<>();
         wrapper1.eq(BrandEntity::getBrandId, categoryBrandRelation.getBrandId());
         BrandEntity brandEntity = brandDao.selectOne(wrapper1);
-        categoryBrandRelation.setBrandName(brandEntity.getName());
+        if(brandEntity != null){
+            categoryBrandRelation.setBrandName(brandEntity.getName());
+        }
 
         this.save(categoryBrandRelation);
     }

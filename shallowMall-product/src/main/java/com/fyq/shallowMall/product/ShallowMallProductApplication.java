@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Import;
 //        "com.fyq.shallowMall.product",
 //        "com.fyq.common"
 //})
-@EnableAspectJAutoProxy
 @SpringBootApplication
 @EnableDiscoveryClient
 @MapperScan("com.fyq.shallowMall.product.dao")

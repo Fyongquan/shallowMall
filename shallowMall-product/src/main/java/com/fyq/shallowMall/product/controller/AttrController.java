@@ -42,7 +42,6 @@ public class AttrController {
         return R.ok().put("data", page);
     }
 
-
     /**
      * 单独回显
      */
@@ -79,7 +78,7 @@ public class AttrController {
     /**
      * 删除
      */
-    @RequestMapping("/delete")
+    @PostMapping("/delete")
     public R delete(@RequestBody Long[] attrIds){
 		attrService.removeByIds(Arrays.asList(attrIds));
 
@@ -87,15 +86,19 @@ public class AttrController {
     }
 
     /**
-     * 删除
+     * 根据分类id查询出所有的属性，根据属性类型获取对应的属性
+     * @param params
+     * @param categoryId
+     * @param attrType
+     * @return
      */
     @LogAnnotation
-    @GetMapping("/base/list/{catalogId}")
-    public R delete(@RequestParam Map<String, Object> params, @PathVariable("catalogId") Long catalogId){
-
-        PageUtils page = attrService.queryBaseAttrPage(params, catalogId);
+    @GetMapping("/{attrType}/list/{catalogId}")
+    public R list(@RequestParam Map<String, Object> params,
+                  @PathVariable("catalogId") Long categoryId,
+                  @PathVariable("attrType") String attrType){
+        PageUtils page = attrService.queryBaseAttrPage(params, categoryId, attrType);
 
         return R.ok().put("page", page);
     }
-
 }

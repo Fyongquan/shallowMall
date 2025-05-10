@@ -2,8 +2,11 @@ package com.fyq.shallowMall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fyq.common.utils.PageUtils;
+import com.fyq.shallowMall.product.entity.AttrEntity;
 import com.fyq.shallowMall.product.entity.AttrGroupEntity;
+import com.fyq.shallowMall.product.vo.AttrGroupRelationVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,5 +21,13 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     PageUtils queryPage(Map<String, Object> params, Long catalogId);
+
+    List<AttrEntity> getAttrRelation(Long attrGroupId);
+
+    void removeRelationBatch(List<AttrGroupRelationVo> relationEntities);
+
+    PageUtils queryNoattrPage(Map<String, Object> params, Long attrGroupId);
+
+    void saveBatch(List<AttrGroupRelationVo> relationEntities);
 }
 

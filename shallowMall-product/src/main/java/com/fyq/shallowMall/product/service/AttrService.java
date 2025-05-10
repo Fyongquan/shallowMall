@@ -1,5 +1,6 @@
 package com.fyq.shallowMall.product.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fyq.common.utils.PageUtils;
 import com.fyq.shallowMall.product.entity.AttrEntity;
@@ -19,12 +20,14 @@ public interface AttrService extends IService<AttrEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
 
-    PageUtils queryBaseAttrPage(Map<String, Object> params, Long catalogId);
-
     void saveAttr(AttrVo attr);
 
     AttrRespVo getAttrRespVo(Long attrId);
 
     void updateAttrCascade(AttrVo attrRespVo);
+
+    PageUtils queryPage(Map<String, Object> params, LambdaQueryWrapper<AttrEntity> wrapper);
+
+    PageUtils queryBaseAttrPage(Map<String, Object> params, Long catalogId, String attrType);
 }
 
