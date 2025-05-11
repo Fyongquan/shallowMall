@@ -6,9 +6,9 @@ import java.util.Map;
 
 import com.fyq.common.utils.PageUtils;
 import com.fyq.common.utils.R;
-import com.fyq.shallowMall.product.entity.BrandEntity;
 import com.fyq.shallowMall.product.entity.CategoryBrandRelationEntity;
 import com.fyq.shallowMall.product.service.CategoryBrandRelationService;
+import com.fyq.shallowMall.product.vo.BrandVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +33,7 @@ public class CategoryBrandRelationController {
     @GetMapping("/brands/list")
     //@RequiresPermissions("product:categorybrandrelation:list")
     public R queryCategoryRelatedBrands(@RequestParam("catId") Long catId){
-        List<BrandEntity> result = this.categoryBrandRelationService.queryCategoryRelatedBrands(catId);
+        List<BrandVo> result = this.categoryBrandRelationService.getBrandsByCatId(catId);
 
         return R.ok().put("data", result);
     }

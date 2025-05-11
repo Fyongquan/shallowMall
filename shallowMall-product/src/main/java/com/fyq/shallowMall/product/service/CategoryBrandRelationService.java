@@ -3,8 +3,8 @@ package com.fyq.shallowMall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fyq.common.utils.PageUtils;
-import com.fyq.shallowMall.product.entity.BrandEntity;
 import com.fyq.shallowMall.product.entity.CategoryBrandRelationEntity;
+import com.fyq.shallowMall.product.vo.BrandVo;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +20,7 @@ public interface CategoryBrandRelationService extends IService<CategoryBrandRela
 
     PageUtils queryPage(Map<String, Object> params);
 
-    List<BrandEntity> queryCategoryRelatedBrands(Long catId);
+    List<BrandVo> getBrandsByCatId(Long catId);
 
     List<CategoryBrandRelationEntity> queryCatalogList(Long brandId);
 

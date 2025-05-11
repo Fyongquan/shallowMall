@@ -46,10 +46,4 @@ public class AttrGroupEntity implements Serializable {
 	 */
 	private Long catalogId;
 
-	/**
-	 * 分类ID完整路径
-	 */
-	@TableField(exist = false)
-	private Long[] catalogPath;
-
 }

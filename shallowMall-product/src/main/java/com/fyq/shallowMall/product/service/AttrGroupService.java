@@ -5,6 +5,7 @@ import com.fyq.common.utils.PageUtils;
 import com.fyq.shallowMall.product.entity.AttrEntity;
 import com.fyq.shallowMall.product.entity.AttrGroupEntity;
 import com.fyq.shallowMall.product.vo.AttrGroupRelationVo;
+import com.fyq.shallowMall.product.vo.AttrGroupWithAttrsVo;
 
 import java.util.List;
 import java.util.Map;
@@ -29,5 +30,7 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
     PageUtils queryNoattrPage(Map<String, Object> params, Long attrGroupId);
 
     void saveBatch(List<AttrGroupRelationVo> relationEntities);
+
+    List<AttrGroupWithAttrsVo> getAttrGroupsWithAttrsByCatalogId(Long catalogId);
 }
 

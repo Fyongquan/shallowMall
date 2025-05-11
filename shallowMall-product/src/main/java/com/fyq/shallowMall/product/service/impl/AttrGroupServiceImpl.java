@@ -15,6 +15,7 @@ import com.fyq.shallowMall.product.service.AttrAttrgroupRelationService;
 import com.fyq.shallowMall.product.service.AttrGroupService;
 import com.fyq.shallowMall.product.service.AttrService;
 import com.fyq.shallowMall.product.vo.AttrGroupRelationVo;
+import com.fyq.shallowMall.product.vo.AttrGroupWithAttrsVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,5 +148,19 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
             return relationEntity;
         }).collect(Collectors.toList());
         relationService.saveBatch(relationEntities1);
+    }
+
+    @Override
+    public List<AttrGroupWithAttrsVo> getAttrGroupsWithAttrsByCatalogId(Long catalogId) {
+        LambdaQueryWrapper<AttrGroupEntity> wrapper = new LambdaQueryWrapper<AttrGroupEntity>().eq(AttrGroupEntity::getCatalogId,  catalogId);
+        List<AttrGroupEntity> attrGroupEntities = baseMapper.selectList(wrapper);
+        return attrGroupEntities.stream().map(item -> {
+            AttrGroupWithAttrsVo attrGroupWithAttrsVo = new AttrGroupWithAttrsVo();
+            BeanUtils.copyProperties(item, attrGroupWithAttrsVo);
+            //先去关联表中查找attrGroupId对应的所有attrIds，然后去attr表中找到所有的attrs
+            List<AttrEntity> attrEntities = this.getAttrRelation(item.getAttrGroupId());
+            attrGroupWithAttrsVo.setAttrs(attrEntities);
+            return attrGroupWithAttrsVo;
+        }).collect(Collectors.toList());
     }
 }

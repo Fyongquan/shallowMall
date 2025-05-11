@@ -9,6 +9,9 @@ import com.fyq.shallowMall.product.entity.AttrAttrgroupRelationEntity;
 import com.fyq.shallowMall.product.entity.AttrEntity;
 import com.fyq.shallowMall.product.service.CategoryService;
 import com.fyq.shallowMall.product.vo.AttrGroupRelationVo;
+import com.fyq.shallowMall.product.vo.AttrGroupVo;
+import com.fyq.shallowMall.product.vo.AttrGroupWithAttrsVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,10 +57,12 @@ public class AttrGroupController {
     @RequestMapping("/info/{attrGroupId}")
     public R info(@PathVariable("attrGroupId") Long attrGroupId){
 		AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
+        AttrGroupVo attrGroupVo = new AttrGroupVo();
+        BeanUtils.copyProperties(attrGroup, attrGroupVo);
 
-        attrGroup.setCatalogPath(categoryService.getCatalogPath(attrGroup.getCatalogId()));
+        attrGroupVo.setCatalogPath(categoryService.getCatalogPath(attrGroup.getCatalogId()));
 
-        return R.ok().put("attrGroup", attrGroup);
+        return R.ok().put("attrGroup", attrGroupVo);
     }
 
     /**
@@ -136,6 +141,18 @@ public class AttrGroupController {
     @PostMapping("/attr/relation")
     public void addRelation(@RequestBody List<AttrGroupRelationVo> relationEntities){
         attrGroupService.saveBatch(relationEntities);
+    }
+
+    /**
+     * 获取分类下所有分组和分组关联的属性
+     * @param catalogId
+     * @return
+     */
+    @GetMapping("/{catalogId}/withattr")
+    public R getAttrGroupsWithAttrsByCatalogId(@PathVariable("catalogId") Long catalogId){
+        List<AttrGroupWithAttrsVo> attrGroupWithAttrsVos = attrGroupService.getAttrGroupsWithAttrsByCatalogId(catalogId);
+
+        return R.ok().put("data", attrGroupWithAttrsVos);
     }
 
 }
