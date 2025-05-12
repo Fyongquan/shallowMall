@@ -3,6 +3,7 @@ package com.fyq.shallowMall.coupon.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,7 @@ import com.fyq.common.utils.R;
  */
 @RestController
 @RequestMapping("coupon/skufullreduction")
+@Slf4j
 public class SkuFullReductionController {
     @Autowired
     private SkuFullReductionService skuFullReductionService;
@@ -56,6 +58,7 @@ public class SkuFullReductionController {
      */
     @RequestMapping("/save")
     public R save(@RequestBody SkuFullReductionEntity skuFullReduction){
+        log.info("保存满减信息,{}",  skuFullReduction);
 		skuFullReductionService.save(skuFullReduction);
 
         return R.ok();

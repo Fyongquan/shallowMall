@@ -3,6 +3,7 @@ package com.fyq.shallowMall.coupon.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,7 @@ import com.fyq.common.utils.R;
  */
 @RestController
 @RequestMapping("coupon/skuladder")
+@Slf4j
 public class SkuLadderController {
     @Autowired
     private SkuLadderService skuLadderService;
@@ -56,6 +58,7 @@ public class SkuLadderController {
      */
     @RequestMapping("/save")
     public R save(@RequestBody SkuLadderEntity skuLadder){
+        log.info("保存商品阶梯信息,{}",  skuLadder);
 		skuLadderService.save(skuLadder);
 
         return R.ok();

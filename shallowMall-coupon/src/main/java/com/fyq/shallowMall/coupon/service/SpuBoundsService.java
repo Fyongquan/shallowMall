@@ -1,6 +1,7 @@
 package com.fyq.shallowMall.coupon.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fyq.common.to.SpuBoundsTo;
 import com.fyq.common.utils.PageUtils;
 import com.fyq.shallowMall.coupon.entity.SpuBoundsEntity;
 
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface SpuBoundsService extends IService<SpuBoundsEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void saveSpuBoundsTo(SpuBoundsTo spuBoundsTo);
 }
 

@@ -3,12 +3,10 @@ package com.fyq.shallowMall.coupon.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.fyq.common.to.SpuBoundsTo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.fyq.shallowMall.coupon.entity.SpuBoundsEntity;
 import com.fyq.shallowMall.coupon.service.SpuBoundsService;
@@ -26,6 +24,7 @@ import com.fyq.common.utils.R;
  */
 @RestController
 @RequestMapping("coupon/spubounds")
+@Slf4j
 public class SpuBoundsController {
     @Autowired
     private SpuBoundsService spuBoundsService;
@@ -55,8 +54,19 @@ public class SpuBoundsController {
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody SpuBoundsEntity spuBounds){
-		spuBoundsService.save(spuBounds);
+    public R save(@RequestBody SpuBoundsEntity spuBoundsEntity){
+        log.info("保存商品积分信息,{}", spuBoundsEntity);
+		spuBoundsService.save(spuBoundsEntity);
+
+        return R.ok();
+    }
+
+    /**
+     * 保存
+     */
+    @PostMapping("/saveSpuBounds")
+    public R saveSpuBounds(@RequestBody SpuBoundsTo spuBoundsTo){
+        spuBoundsService.saveSpuBoundsTo(spuBoundsTo);
 
         return R.ok();
     }

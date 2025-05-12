@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Import;
 //        "com.fyq.shallowMall.product",
 //        "com.fyq.common"
 //})
+@EnableFeignClients(basePackages = "com.fyq.shallowMall.product.feign")
 @SpringBootApplication
 @EnableDiscoveryClient
 @MapperScan("com.fyq.shallowMall.product.dao")

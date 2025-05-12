@@ -1,8 +1,10 @@
 package com.fyq.shallowMall.coupon.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +28,7 @@ import com.fyq.common.utils.R;
  */
 @RestController
 @RequestMapping("coupon/memberprice")
+@Slf4j
 public class MemberPriceController {
     @Autowired
     private MemberPriceService memberPriceService;
@@ -57,6 +60,17 @@ public class MemberPriceController {
     @RequestMapping("/save")
     public R save(@RequestBody MemberPriceEntity memberPrice){
 		memberPriceService.save(memberPrice);
+
+        return R.ok();
+    }
+
+    /**
+     * 批量保存
+     */
+    @RequestMapping("/saveBatch")
+    public R saveBatch(@RequestBody List<MemberPriceEntity> memberPrice){
+        log.info("保存会员价格信息,{}",  memberPrice);
+		memberPriceService.saveBatch(memberPrice);
 
         return R.ok();
     }
