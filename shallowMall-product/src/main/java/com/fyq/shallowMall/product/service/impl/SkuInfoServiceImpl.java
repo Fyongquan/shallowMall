@@ -1,6 +1,10 @@
 package com.fyq.shallowMall.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -23,6 +27,35 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
                 new QueryWrapper<SkuInfoEntity>()
         );
 
+        return new PageUtils(page);
+    }
+
+    @Override
+    public PageUtils queryPage(Map<String, Object> params, Long catalogId, String key, Long brandId, BigDecimal min, BigDecimal max) {
+
+        LambdaQueryWrapper<SkuInfoEntity> wrapper = new LambdaQueryWrapper<>();
+        if (catalogId != null && catalogId != 0){
+            wrapper.eq(SkuInfoEntity::getCatalogId, catalogId);
+        }
+        if (brandId != null && brandId != 0){
+            wrapper.eq(SkuInfoEntity::getBrandId, brandId);
+        }
+        if(!StringUtils.isEmpty(key)){
+            wrapper.and(w1 -> {
+                w1.eq(SkuInfoEntity::getSkuId, key);
+                w1.or().like(SkuInfoEntity::getSkuName, key);
+            });
+        }
+        if(min != null && min.compareTo(BigDecimal.ZERO) > 0){
+            wrapper.ge(SkuInfoEntity::getPrice, min);
+        }
+        if(max != null && max.compareTo(BigDecimal.ZERO) > 0){
+            wrapper.le(SkuInfoEntity::getPrice, max);
+        }
+        IPage<SkuInfoEntity> page = this.page(
+                new Query<SkuInfoEntity>().getPage(params),
+                wrapper
+        );
         return new PageUtils(page);
     }
 

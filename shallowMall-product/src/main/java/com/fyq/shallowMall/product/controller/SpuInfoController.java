@@ -35,8 +35,12 @@ public class SpuInfoController {
      * 列表
      */
     @RequestMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = spuInfoService.queryPage(params);
+    public R list(@RequestParam Map<String, Object> params,
+                  @RequestParam(value = "catalogId", required = false) Long catalogId,
+                  @RequestParam(value = "status", required = false) Integer status,
+                  @RequestParam(value = "key", required = false) String key,
+                  @RequestParam(value = "brandId", required = false) Long brandId){
+        PageUtils page = spuInfoService.querySpuInfoPage(params, catalogId, status, key, brandId);
 
         return R.ok().put("page", page);
     }

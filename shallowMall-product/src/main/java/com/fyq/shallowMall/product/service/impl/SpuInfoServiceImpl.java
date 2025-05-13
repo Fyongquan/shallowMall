@@ -1,5 +1,6 @@
 package com.fyq.shallowMall.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -11,16 +12,10 @@ import com.fyq.common.utils.PageUtils;
 import com.fyq.common.utils.Query;
 import com.fyq.common.utils.R;
 import com.fyq.shallowMall.product.dao.SpuInfoDao;
-import com.fyq.shallowMall.product.entity.SkuImagesEntity;
-import com.fyq.shallowMall.product.entity.SkuInfoEntity;
-import com.fyq.shallowMall.product.entity.SkuSaleAttrValueEntity;
-import com.fyq.shallowMall.product.entity.SpuInfoEntity;
+import com.fyq.shallowMall.product.entity.*;
 import com.fyq.shallowMall.product.feign.CouponFeignService;
 import com.fyq.shallowMall.product.service.*;
-import com.fyq.shallowMall.product.vo.Attr;
-import com.fyq.shallowMall.product.vo.Images;
-import com.fyq.shallowMall.product.vo.Skus;
-import com.fyq.shallowMall.product.vo.SpuSaveVo;
+import com.fyq.shallowMall.product.vo.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +46,10 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     private SkuSaleAttrValueService skuSaleAttrValueService;
     @Autowired
     private CouponFeignService couponFeignService;
+    @Autowired
+    private BrandService brandService;
+    @Autowired
+    private CategoryService categoryService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -173,6 +172,45 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                 log.error("远程调用sku会员信息保存方法失败");
             }
         });
+    }
+
+    @Override
+    public PageUtils querySpuInfoPage(Map<String, Object> params, Long catalogId, Integer status, String key, Long brandId) {
+        LambdaQueryWrapper<SpuInfoEntity> wrapper = new LambdaQueryWrapper<>();
+        if (catalogId != null) {
+            wrapper.eq(SpuInfoEntity::getCatalogId, catalogId);
+        }
+        if (brandId != null) {
+            wrapper.eq(SpuInfoEntity::getBrandId, brandId);
+        }
+        if (status != null) {
+            wrapper.eq(SpuInfoEntity::getPublishStatus, status);
+        }
+        if (StringUtils.isNotEmpty(key)) {
+            wrapper.and(w1 -> {
+                w1.eq(SpuInfoEntity::getId, key);
+                w1.or().like(SpuInfoEntity::getSpuName, key);
+            });
+        }
+        IPage<SpuInfoEntity> page = this.page(new Query<SpuInfoEntity>().getPage(params), wrapper);
+        List<SpuInfoEntity> records = page.getRecords();
+        List<SpuInfoVo> spuInfoVos = new ArrayList<>();
+        records.forEach(spuInfoEntity -> {
+            SpuInfoVo spuInfoVo = new SpuInfoVo();
+            BeanUtils.copyProperties(spuInfoEntity, spuInfoVo);
+            BrandEntity brandEntity = brandService.getById(spuInfoEntity.getBrandId());
+            if (brandEntity != null) {
+                spuInfoVo.setBrandName(brandEntity.getName());
+            }
+            CategoryEntity categoryEntity = categoryService.getById(spuInfoEntity.getCatalogId());
+            if (categoryEntity != null) {
+                spuInfoVo.setCatalogName(categoryEntity.getName());
+            }
+            spuInfoVos.add(spuInfoVo);
+        });
+        PageUtils pageUtils = new PageUtils(page);
+        pageUtils.setList(spuInfoVos);
+        return pageUtils;
     }
 
 }

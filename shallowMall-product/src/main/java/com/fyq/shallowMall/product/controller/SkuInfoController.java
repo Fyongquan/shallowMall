@@ -1,5 +1,6 @@
 package com.fyq.shallowMall.product.controller;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -34,8 +35,13 @@ public class SkuInfoController {
      * 列表
      */
     @RequestMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = skuInfoService.queryPage(params);
+    public R list(@RequestParam Map<String, Object> params,
+                  @RequestParam(value = "catalogId", required = false) Long catalogId,
+                  @RequestParam(value = "key", required = false) String key,
+                  @RequestParam(value = "brandId", required = false) Long brandId,
+                  @RequestParam(value = "min",  required = false) BigDecimal min,
+                  @RequestParam(value = "max", required = false) BigDecimal max){
+        PageUtils page = skuInfoService.queryPage(params, catalogId, key, brandId, min, max);
 
         return R.ok().put("page", page);
     }
