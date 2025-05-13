@@ -8,3 +8,7 @@ spring:
 
 server:
   port: 30000
+
+logging:
+  level:
+    com.fyq.shallowMall: debug

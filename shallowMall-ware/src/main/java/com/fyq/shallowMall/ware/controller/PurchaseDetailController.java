@@ -34,8 +34,11 @@ public class PurchaseDetailController {
      * 列表
      */
     @RequestMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = purchaseDetailService.queryPage(params);
+    public R list(@RequestParam Map<String, Object> params,
+                  @RequestParam(value = "wareId", required = false) Long wareId,
+                  @RequestParam(value = "status", required = false) Integer status,
+                  @RequestParam(value = "key", required = false) String key){
+        PageUtils page = purchaseDetailService.queryPurchaseDetailPage(params, wareId, status, key);
 
         return R.ok().put("page", page);
     }
