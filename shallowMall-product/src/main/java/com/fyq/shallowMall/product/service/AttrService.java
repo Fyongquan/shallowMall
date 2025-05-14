@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fyq.common.utils.PageUtils;
 import com.fyq.shallowMall.product.entity.AttrEntity;
+import com.fyq.shallowMall.product.entity.ProductAttrValueEntity;
 import com.fyq.shallowMall.product.vo.AttrRespVo;
 import com.fyq.shallowMall.product.vo.AttrVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**

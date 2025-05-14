@@ -1,10 +1,13 @@
 package com.fyq.shallowMall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.fyq.shallowMall.product.Aspect.LogAspect;
 import com.fyq.shallowMall.product.annotation.LogAnnotation;
+import com.fyq.shallowMall.product.entity.ProductAttrValueEntity;
+import com.fyq.shallowMall.product.service.ProductAttrValueService;
 import com.fyq.shallowMall.product.vo.AttrRespVo;
 import com.fyq.shallowMall.product.vo.AttrVo;
 import lombok.extern.java.Log;
@@ -31,6 +34,8 @@ import com.fyq.common.utils.R;
 public class AttrController {
     @Autowired
     private AttrService attrService;
+    @Autowired
+    private ProductAttrValueService productAttrValueService;
 
     /**
      * 列表
@@ -100,5 +105,28 @@ public class AttrController {
         PageUtils page = attrService.queryBaseAttrPage(params, categoryId, attrType);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 根据spuId查询出所有的属性关联
+     * @param spuId
+     * @return
+     */
+    @GetMapping("/base/listforspu/{spuId}")
+    public R listforspu(@PathVariable("spuId") Long spuId){
+        List<ProductAttrValueEntity> entities = productAttrValueService.listBySpuId(spuId);
+        return R.ok().put("data", entities);
+    }
+
+    /**
+     * 批量修改属性关联
+     * @param entities
+     * @return
+     */
+    @PostMapping("/update/{spuId}")
+    public R updateAttrValues(@RequestBody List<ProductAttrValueEntity> entities,
+                              @PathVariable("spuId") Long spuId){
+        productAttrValueService.updateAttrValueBatch(entities, spuId);
+        return R.ok();
     }
 }

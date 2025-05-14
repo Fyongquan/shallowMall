@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.fyq.common.constant.ProductConstant;
 import com.fyq.shallowMall.product.entity.AttrAttrgroupRelationEntity;
 import com.fyq.shallowMall.product.entity.AttrGroupEntity;
+import com.fyq.shallowMall.product.entity.ProductAttrValueEntity;
 import com.fyq.shallowMall.product.service.AttrAttrgroupRelationService;
 import com.fyq.shallowMall.product.service.AttrGroupService;
 import com.fyq.shallowMall.product.service.CategoryService;
@@ -15,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
