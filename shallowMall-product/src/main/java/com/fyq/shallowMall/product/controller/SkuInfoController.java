@@ -5,11 +5,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.fyq.shallowMall.product.entity.SkuInfoEntity;
 import com.fyq.shallowMall.product.service.SkuInfoService;
@@ -34,7 +30,7 @@ public class SkuInfoController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
+    @GetMapping("/list")
     public R list(@RequestParam Map<String, Object> params,
                   @RequestParam(value = "catalogId", required = false) Long catalogId,
                   @RequestParam(value = "key", required = false) String key,
@@ -50,7 +46,7 @@ public class SkuInfoController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{skuId}")
+    @GetMapping("/info/{skuId}")
     public R info(@PathVariable("skuId") Long skuId){
 		SkuInfoEntity skuInfo = skuInfoService.getById(skuId);
 
