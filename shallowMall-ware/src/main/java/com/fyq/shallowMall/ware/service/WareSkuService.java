@@ -3,6 +3,7 @@ package com.fyq.shallowMall.ware.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fyq.common.utils.PageUtils;
 import com.fyq.shallowMall.ware.entity.WareSkuEntity;
+import com.fyq.common.to.SkuHasStockTo;
 
 import java.util.List;
 import java.util.Map;
@@ -21,5 +22,7 @@ public interface WareSkuService extends IService<WareSkuEntity> {
     PageUtils queryWareSkuPage(Map<String, Object> params, Long skuId, Long wareId);
 
     void addStock(Long skuId, Long wareId, Integer skuNum);
+
+    List<SkuHasStockTo> hasStock(List<Long> skuId);
 }
 

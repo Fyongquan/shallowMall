@@ -195,6 +195,10 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 
     }
 
-
-
+    @Override
+    public List<AttrEntity> getSearchAttrs(List<Long> attrIds) {
+        return this.list(new LambdaQueryWrapper<AttrEntity>()
+                .in(AttrEntity::getAttrId, attrIds)
+                .eq(AttrEntity::getSearchType, 1));
+    }
 }

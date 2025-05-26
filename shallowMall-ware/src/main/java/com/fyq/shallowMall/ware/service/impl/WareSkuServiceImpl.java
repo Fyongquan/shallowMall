@@ -1,10 +1,7 @@
 package com.fyq.shallowMall.ware.service.impl;
 
-import com.alibaba.fastjson.TypeReference;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fyq.common.utils.PageUtils;
@@ -14,9 +11,9 @@ import com.fyq.shallowMall.ware.dao.WareSkuDao;
 import com.fyq.shallowMall.ware.entity.WareSkuEntity;
 import com.fyq.shallowMall.ware.feign.ProductFeignService;
 import com.fyq.shallowMall.ware.service.WareSkuService;
+import com.fyq.common.to.SkuHasStockTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +78,34 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             }
             this.save(skuEntity);
         }
+    }
+
+    @Override
+    public List<SkuHasStockTo> hasStock(List<Long> skuIds) {
+        List<SkuHasStockTo> skuHasStockVos = new ArrayList<>();
+        for (Long skuId : skuIds) {
+            WareSkuEntity skuEntity = this.getOne(new LambdaQueryWrapper<WareSkuEntity>().eq(WareSkuEntity::getSkuId, skuId));
+            SkuHasStockTo skuHasStockVo = new SkuHasStockTo();
+            skuHasStockVo.setSkuId(skuId);
+            //如果没有库存信息直接返回没有库存
+            if(skuEntity == null){
+                skuHasStockVo.setHasStock(false);
+            }else{
+                Integer stock = skuEntity.getStock();
+                Integer stockLocked = skuEntity.getStockLocked();
+
+                // 默认值处理：null 视为 0
+                int availableStock = (stock != null ? stock : 0) - (stockLocked != null ? stockLocked : 0);
+
+                if (availableStock <= 0) {
+                    skuHasStockVo.setHasStock(false);
+                } else {
+                    skuHasStockVo.setHasStock(true);
+                }
+            }
+            skuHasStockVos.add(skuHasStockVo);
+        }
+        return skuHasStockVos;
     }
 
 

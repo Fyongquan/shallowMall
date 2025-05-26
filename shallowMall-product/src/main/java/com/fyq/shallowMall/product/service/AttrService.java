@@ -31,5 +31,7 @@ public interface AttrService extends IService<AttrEntity> {
     PageUtils queryPage(Map<String, Object> params, LambdaQueryWrapper<AttrEntity> wrapper);
 
     PageUtils queryBaseAttrPage(Map<String, Object> params, Long catalogId, String attrType);
+
+    List<AttrEntity> getSearchAttrs(List<Long> attrIds);
 }
 
