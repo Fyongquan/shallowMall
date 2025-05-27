@@ -19,6 +19,8 @@ spring:
     name: shallowMall-product
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    cache: false
 
 # 👇 新增 feign 超时配置
 feign:
@@ -42,5 +44,4 @@ server:
 logging:
   level:
     com.fyq.shallowMall: debug
-
 
