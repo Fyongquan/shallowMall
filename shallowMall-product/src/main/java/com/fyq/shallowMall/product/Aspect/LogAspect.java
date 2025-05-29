@@ -24,7 +24,8 @@ public class LogAspect {
         try {
             Object result = point.proceed();
             Long end = System.nanoTime();
-            log.info("总耗时：{}ms", (end - start) * 0.000001);
+            System.out.println("耗时：" + (end - start) * 0.000001 +"ms");
+//            log.info("总耗时：{}ms", (end - start) * 0.000001);
             return result;
         } catch (Throwable throwable) {
             throwable.printStackTrace();
