@@ -7,12 +7,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -20,6 +23,9 @@ public class ShallowMallProductApplicationTests {
 
     @Autowired
     private BrandService brandService;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
 //    @Autowired
 //    private OSSClient ossClient;
@@ -35,6 +41,17 @@ public class ShallowMallProductApplicationTests {
     public void contextLoads() {
         List<BrandEntity> list = brandService.list(new QueryWrapper<BrandEntity>().eq("brand_id", 1));
         System.out.println("返回的结果是" + list);
+    }
+
+    @Test
+    public void testRedis() {
+        ValueOperations<String, String> operations = redisTemplate.opsForValue();
+
+        operations.set("hello", "world_" + UUID.randomUUID().toString());
+
+        String hello = operations.get("hello");
+
+        System.out.println(hello);
     }
 
 }

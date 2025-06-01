@@ -21,6 +21,9 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
   thymeleaf:
     cache: true
+  redis:
+    host: 192.168.56.10
+    port: 6379
 
 # 👇 新增 feign 超时配置
 feign:
