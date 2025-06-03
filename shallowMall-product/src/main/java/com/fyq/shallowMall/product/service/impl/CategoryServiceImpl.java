@@ -8,14 +8,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fyq.common.utils.PageUtils;
 import com.fyq.common.utils.Query;
-import com.fyq.shallowMall.product.annotation.LogAnnotation;
 import com.fyq.shallowMall.product.dao.CategoryDao;
 import com.fyq.shallowMall.product.entity.CategoryEntity;
 import com.fyq.shallowMall.product.service.CategoryBrandRelationService;
 import com.fyq.shallowMall.product.service.CategoryService;
 import com.fyq.shallowMall.product.vo.Catalog2Vo;
 import org.apache.commons.lang.StringUtils;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -35,6 +37,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Autowired
     private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private RedissonClient redisson;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -106,8 +111,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         }
     }
 
+    //每一个需要缓存的数据都指定要放到哪个名字的缓存(缓存的分区(按照业务类型))
+    @Cacheable(value = {"category"},key = "#root.methodName")   //代表当前方法的结果需要缓存，如果缓存中有，方法不会调用。如果缓存中没有，会调用方法，将结果放入缓存中
     @Override
     public List<CategoryEntity> getLevel1Categories() {
+        System.out.println("getLevel1Categories");
         LambdaQueryWrapper<CategoryEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(CategoryEntity::getParentCid, 0)
                 .select(CategoryEntity::getCatId, CategoryEntity::getName);
@@ -117,36 +125,54 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     //TODO 产生堆外内存溢出OutOfDirectMemoryError
     //从redis中获取数据
     @Override
-    public Map<String, List<Catalog2Vo>> getCatalogJson(){
+    public Map<String, List<Catalog2Vo>> getCatalogJson() {
         //加入缓存，缓存中存储的是字符串
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
         String catalogJson = operations.get("catalogJson");
-        if(StringUtils.isEmpty(catalogJson)){
+        if (StringUtils.isEmpty(catalogJson)) {
             Map<String, List<Catalog2Vo>> catalogJsonFromDb = getCatalogJsonFromDbWithRedisLock();
             return catalogJsonFromDb;
         }
         //缓存不为空，直接返回
         System.out.println("从redis中获取数据");
-        return JSON.parseObject(catalogJson, new TypeReference<Map<String, List<Catalog2Vo>>>(){});
+        return JSON.parseObject(catalogJson, new TypeReference<Map<String, List<Catalog2Vo>>>() {
+        });
     }
 
-    //使用分布式锁从数据库查询并封装数据
+    //使用Redisson分布式锁从数据库查询并封装数据
+    public Map<String, List<Catalog2Vo>> getCatalogJsonFromDbWithRedissonLock() {
+        //获取分布式锁
+        // 锁的名字。锁的粒度，越细越快
+        // 锁的粒度，具体缓存的是某个数据，11-号商铺；
+        RLock lock = redisson.getLock("CatalogJson-lock");
+        lock.lock();
+
+        Map<String, List<Catalog2Vo>> result;
+        try {
+            result = getCatalogJsonFromDb();
+        } finally {
+            lock.unlock();
+        }
+        return result;
+    }
+
+    //使用Redis分布式锁从数据库查询并封装数据
     public Map<String, List<Catalog2Vo>> getCatalogJsonFromDbWithRedisLock() {
         //获取分布式锁
         String uuid = UUID.randomUUID().toString();
         Boolean lock = redisTemplate.opsForValue().setIfAbsent("catalogJsonLock", uuid, 300, TimeUnit.SECONDS);
-        if(lock){
+        if (lock) {
             Map<String, List<Catalog2Vo>> result;
-            try{
+            try {
                 result = getCatalogJsonFromDb();
-            }finally {
+            } finally {
                 //Redis+Lua脚本删除锁
                 String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
                 redisTemplate.execute(new DefaultRedisScript<>(script, Long.class), Arrays.asList("catalogJsonLock"), uuid);
             }
             return result;
 
-        }else{
+        } else {
             System.out.println("等待其他线程释放锁");
             try {
                 Thread.sleep(100); // 等待 100 毫秒
@@ -161,11 +187,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     //使用本地锁从数据库查询并封装数据
     public Map<String, List<Catalog2Vo>> getCatalogJsonFromDbWithLocalLock() {
 
-        synchronized (this){
+        synchronized (this) {
             String catalogJson = redisTemplate.opsForValue().get("catalogJson");
             //缓存不为空，直接返回
-            if (!StringUtils.isEmpty(catalogJson)){
-                return JSON.parseObject(catalogJson, new TypeReference<Map<String, List<Catalog2Vo>>>(){});
+            if (!StringUtils.isEmpty(catalogJson)) {
+                return JSON.parseObject(catalogJson, new TypeReference<Map<String, List<Catalog2Vo>>>() {
+                });
             }
             // 1、查询所有的分类并构建分类map
             List<CategoryEntity> allCategories = this.list();

@@ -5,6 +5,8 @@ import com.fyq.shallowMall.product.entity.BrandEntity;
 import com.fyq.shallowMall.product.service.BrandService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.redisson.api.RedissonClient;
+import org.redisson.spring.cache.RedissonCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -26,6 +28,15 @@ public class ShallowMallProductApplicationTests {
 
     @Autowired
     private StringRedisTemplate redisTemplate;
+
+    @Autowired
+    private RedissonClient redissonClient;
+
+    @Test
+    public void testRedisson() {
+        System.out.println(redissonClient);
+
+    }
 
 //    @Autowired
 //    private OSSClient ossClient;
